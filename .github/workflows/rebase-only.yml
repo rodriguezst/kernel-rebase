@@ -3,8 +3,8 @@ name: rebase-only
 env:
   CURR_REPO: 'rodriguezst/linux'
   CURR_REF: 'v6.1.98-nabu'
-  NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'linux-6.1.y'
+  NEW_REPO: 'rodriguezst/linux'
+  NEW_REF: 'v6.1.106'
 
 on:
   workflow_dispatch:
