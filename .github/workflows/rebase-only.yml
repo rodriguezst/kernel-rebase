@@ -21,6 +21,8 @@ jobs:
 
       - name: Build kernel
         run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote add upstream "https://github.com/"${{ env.NEW_REPO }}
-          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }}
+          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=10000
           git rebase ${{ env.NEW_REF }}
