@@ -11,7 +11,7 @@ on:
   push:
 
 jobs:
-  build:
+  rebase:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
           ref: ${{ env.CURR_REF }}
           fetch-depth: 1000
 
-      - name: rebase
+      - name: Rebase
         shell: bash
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -36,4 +36,10 @@ jobs:
           mkdir -p patch
           git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ./patch -- . ':!arch/*/configs/*' > /dev/null
           find ./patch
-
+      - name: Upload patch files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Artifact name
+          name: patches
+          path: |
+            patch/*.patch
