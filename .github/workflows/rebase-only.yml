@@ -25,7 +25,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          UPSTREAM=${{ env.NEW_REF }}
+          UPSTREAM=${{ env.NEW_REPO }}
           if [ ! $(echo ${UPSTREAM} | egrep '^(http|git@)') ]; then
             UPSTREAM="https://github.com/"${UPSTREAM}.git
           fi;
