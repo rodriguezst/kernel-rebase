@@ -34,6 +34,6 @@ jobs:
           git rebase ${{ env.NEW_REF }}
           git log -1 ${{ env.NEW_REF }}
           mkdir -p patch
-          git format-patch upstream/${{ env.NEW_REF }} --start-number=$NO -o ./patch -- . ':!arch/*/configs/*' > /dev/null
+          git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ./patch -- . ':!arch/*/configs/*' > /dev/null
           find ./patch
 
