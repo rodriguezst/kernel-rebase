@@ -33,3 +33,7 @@ jobs:
           git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=10000
           git rebase ${{ env.NEW_REF }}
           git log -1 ${{ env.NEW_REF }}
+          mkdir -p patch
+          git format-patch upstream/${{ env.NEW_REF }} --start-number=$NO -o ./patch -- . ':!arch/*/configs/*' > /dev/null
+          find ./patch
+
