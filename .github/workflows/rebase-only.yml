@@ -1,0 +1,25 @@
+name: rebase-only
+
+env:
+  CURR_REPO: 'rodriguezst/linux'
+  CURR_REF: 'v6.1.98-nabu'
+  NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
+  NEW_REF: 'linux-6.1.y'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CURR_REPO }}
+          ref: ${{ env.CURR_REF }}
+          fetch-depth: 1000
+
+      - uses: imba-tjd/rebase-upstream-action@master
+        with:
+         upstream: ${{ env.NEW_REPO }}
+         branch:   ${{ env.NEW_REF }}
