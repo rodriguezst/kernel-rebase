@@ -3,11 +3,12 @@ name: rebase-only
 env:
   CURR_REPO: 'rodriguezst/linux'
   CURR_REF: 'v6.1.98-nabu'
-  NEW_REPO: 'rodriguezst/linux'
-  NEW_REF: 'v6.1.106'
+  NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
+  NEW_REF: 'linux-6.1.y'
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   build:
@@ -19,10 +20,15 @@ jobs:
           ref: ${{ env.CURR_REF }}
           fetch-depth: 1000
 
-      - name: Build kernel
+      - name: rebase
+        shell: bash
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote add upstream "https://github.com/"${{ env.NEW_REPO }}
+          UPSTREAM=${{ env.NEW_REF }}
+          if [ ! $(echo ${UPSTREAM} | egrep '^(http|git@)') ]; then
+            UPSTREAM="https://github.com/"${UPSTREAM}.git
+          fi;
+          git remote add upstream ${UPSTREAM}
           git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=10000
           git rebase ${{ env.NEW_REF }}
