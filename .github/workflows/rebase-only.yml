@@ -19,7 +19,8 @@ jobs:
           ref: ${{ env.CURR_REF }}
           fetch-depth: 1000
 
-      - uses: imba-tjd/rebase-upstream-action@master
-        with:
-         upstream: ${{ env.NEW_REPO }}
-         branch:   ${{ env.NEW_REF }}
+      - name: Build kernel
+        run: |
+          git remote add upstream "https://github.com/"${{ env.NEW_REPO }}
+          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }}
+          git rebase ${{ env.NEW_REF }}
