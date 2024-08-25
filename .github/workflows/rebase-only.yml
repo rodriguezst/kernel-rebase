@@ -36,6 +36,7 @@ jobs:
           mkdir -p patch
           git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ./patch -- . ':!arch/*/configs/*' > /dev/null
           find ./patch
+          make kernelrelease
       - name: Upload patch files as artifact
         uses: actions/upload-artifact@v4
         with:
