@@ -38,6 +38,9 @@ jobs:
           find ./patch
           KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | \
             sed -E 's/[^0-9]*//g' | tr '\n' '.' | sed 's/\.$//' )
+          EXTRAVERSION=$(grep -E '^EXTRAVERSION' Makefile | \
+            sed -E 's/[^0-9]*//g')
+          [[ -z ${EXTRAVERSION} ]] && KERNVER="${KERNVER}${EXTRAVERSION}"
           echo "KERNVER=${KERNVER}" >> $GITHUB_ENV
       - name: Upload patch files as artifact
         uses: actions/upload-artifact@v4
