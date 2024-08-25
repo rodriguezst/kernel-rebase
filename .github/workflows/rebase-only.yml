@@ -43,6 +43,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: patches-${KERNVER}
+          name: patches-${{ env.KERNVER }}
           path: |
             patch/*.patch
