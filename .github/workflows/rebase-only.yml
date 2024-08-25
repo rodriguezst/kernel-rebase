@@ -36,13 +36,13 @@ jobs:
           mkdir -p patch
           git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ./patch -- . ':!arch/*/configs/*' > /dev/null
           find ./patch
-          KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL|^EXTRAVERSION' Makefile | \
+          KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | \
             sed -E 's/[^0-9]*//g' | tr '\n' '.' | sed 's/\.$//' )
-          echo ${KERNVER}
+          echo "KERNVER=${KERNVER}" >> $GITHUB_ENV
       - name: Upload patch files as artifact
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: patches
+          name: patches-${KERNVER}
           path: |
             patch/*.patch
