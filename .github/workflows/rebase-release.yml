@@ -65,7 +65,7 @@ jobs:
           make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image.gz dtbs modules
           cp .config ../config/config
           cd ../config
-          git add .config
+          git add config
           git commit -m "Linux $KERNVER"
           NEW_COMMIT=$(git rev-parse HEAD)
           echo "NEW_COMMIT=${NEW_COMMIT}" >> $GITHUB_ENV
