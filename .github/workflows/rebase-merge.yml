@@ -46,6 +46,9 @@ jobs:
         with:
           path: config
 
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install build-essential gcc-aarch64-linux-gnu bc flex bison
+
       - name: Update config & build
         shell: bash
         run: |
