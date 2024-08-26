@@ -1,4 +1,4 @@
-name: rebase-only
+name: rebase-and-make
 
 env:
   CURR_REPO: 'rodriguezst/linux'
@@ -18,11 +18,13 @@ jobs:
         with:
           repository: ${{ env.CURR_REPO }}
           ref: ${{ env.CURR_REF }}
+          path: linux
           fetch-depth: 1000
 
       - name: Rebase
         shell: bash
         run: |
+          cd linux
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           UPSTREAM=${{ env.NEW_REPO }}
@@ -32,17 +34,30 @@ jobs:
           git remote add upstream ${UPSTREAM}
           git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=10000
           git rebase ${{ env.NEW_REF }}
-          git log -1 ${{ env.NEW_REF }}
-          mkdir -p patch
-          git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ./patch -- . ':!arch/*/configs/*' > /dev/null
-          find ./patch
+          git log -1 ${{ env.NEW_REF }} > ../RELEASE.md
+          mkdir -p ../patch
+          git format-patch upstream/${{ env.NEW_REF }} --start-number=1 -o ../patch -- . ':!arch/*/configs/*' > /dev/null
+          find ../patch
           KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | \
             sed -E 's/[^0-9]*//g' | tr '\n' '.' | sed 's/\.$//' )
           echo "KERNVER=${KERNVER}" >> $GITHUB_ENV
-      - name: Upload patch files as artifact
+
+      - uses: actions/checkout@v4
+        with:
+          path: config
+
+      - name: Update config & build
+        shell: bash
+        run: |
+          cp config/config linux/.config
+          cd linux
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+          make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image.gz dtbs modules
+
+      - name: Upload patch files and kernel config as artifact
         uses: actions/upload-artifact@v4
         with:
-          # Artifact name
           name: patches-${{ env.KERNVER }}
           path: |
             patch/*.patch
+            linux/.config
