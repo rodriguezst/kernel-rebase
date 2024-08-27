@@ -47,6 +47,7 @@ jobs:
           KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | \
             sed -E 's/[^0-9]*//g' | tr '\n' '.' | sed 's/\.$//' )
           cd ../config
+          git fetch --tags
           NEW_VERSION=true
           git tag -l "$KERNVER" | grep -q "^$KERNVER$" && NEW_VERSION=false
           echo "KERNVER=${KERNVER}" >> $GITHUB_ENV
