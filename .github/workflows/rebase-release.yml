@@ -23,6 +23,10 @@ jobs:
           path: linux
           fetch-depth: 1000
 
+      - uses: actions/checkout@v4
+        with:
+          path: config
+
       - name: Rebase
         shell: bash
         run: |
@@ -42,14 +46,10 @@ jobs:
           find ../patch
           KERNVER=$(grep -E '^VERSION|^PATCHLEVEL|^SUBLEVEL' Makefile | \
             sed -E 's/[^0-9]*//g' | tr '\n' '.' | sed 's/\.$//' )
+          cd ../config
           ! [ $(git tag -l "$KERNVER") ] && NEW_VERSION=true
           echo "KERNVER=${KERNVER}" >> $GITHUB_ENV
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
-
-      - uses: actions/checkout@v4
-        if: ${{ env.NEW_VERSION }}
-        with:
-          path: config
 
       - name: Install dependencies
         if: ${{ env.NEW_VERSION }}
