@@ -52,11 +52,11 @@ jobs:
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
 
       - name: Install dependencies
-        if: ${{ env.NEW_VERSION }}
+        if: env.NEW_VERSION == 'true'
         run: sudo apt update && sudo apt install build-essential gcc-aarch64-linux-gnu bc flex bison
 
       - name: Update config & build
-        if: ${{ env.NEW_VERSION }}
+        if: env.NEW_VERSION == 'true'
         shell: bash
         run: |
           cp config/config linux/.config
@@ -72,7 +72,7 @@ jobs:
           git push
 
       - name: Upload patch files and kernel config as artifact
-        if: ${{ env.NEW_VERSION }}
+        if: env.NEW_VERSION == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: patches-${{ env.KERNVER }}
@@ -80,7 +80,7 @@ jobs:
             patch/*.patch
             config/config
       - name: Release assets
-        if: ${{ env.NEW_VERSION }}
+        if: env.NEW_VERSION == 'true'
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
