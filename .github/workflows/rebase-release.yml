@@ -1,10 +1,10 @@
 name: rebase-and-release
 
 env:
-  CURR_REPO: 'map220v/sm8150-mainline'
-  CURR_REF: 'nabu-6.8'
+  CURR_REPO: 'rodriguezst/linux'
+  CURR_REF: 'sm8150-mainline-6.8'
   NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'v6.11-rc6'
+  NEW_REF: 'v6.9'
 
 on:
   workflow_dispatch:
@@ -38,7 +38,7 @@ jobs:
             UPSTREAM="https://github.com/"${UPSTREAM}.git
           fi;
           git remote add upstream ${UPSTREAM}
-          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }}
+          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=50000
           git rebase ${{ env.NEW_REF }}
           git log -1 ${{ env.NEW_REF }} > ../RELEASE.md
           mkdir -p ../patch
