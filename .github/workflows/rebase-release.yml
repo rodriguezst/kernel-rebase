@@ -4,7 +4,7 @@ env:
   CURR_REPO: 'rodriguezst/linux'
   CURR_REF: 'sm8150-mainline-6.8'
   NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'v6.9'
+  NEW_REF: 'linux-6.8.y'
 
 on:
   workflow_dispatch:
