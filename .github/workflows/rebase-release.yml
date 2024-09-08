@@ -4,7 +4,7 @@ env:
   CURR_REPO: 'map220v/sm8150-mainline'
   CURR_REF: 'nabu-6.8'
   NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'v6.11-rc6'
+  NEW_REF: 'v6.9'
 
 on:
   workflow_dispatch:
