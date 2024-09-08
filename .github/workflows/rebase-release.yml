@@ -1,10 +1,10 @@
 name: rebase-and-release
 
 env:
-  CURR_REPO: 'rodriguezst/linux'
-  CURR_REF: 'v6.1.98-nabu'
+  CURR_REPO: 'map220v/sm8150-mainline'
+  CURR_REF: 'nabu-6.8'
   NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'linux-6.1.y'
+  NEW_REF: 'v6.11-rc6'
 
 on:
   workflow_dispatch:
@@ -61,9 +61,8 @@ jobs:
         if: env.NEW_VERSION == 'true'
         shell: bash
         run: |
-          cp config/config linux/.config
           cd linux
-          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- olddefconfig
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- sm8150
           make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image.gz dtbs modules
           cp .config ../config/config
           cd ../config
@@ -81,18 +80,4 @@ jobs:
           path: |
             patch/*.patch
             config/config
-      - name: Release assets
-        if: env.NEW_VERSION == 'true'
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.KERNVER }}
-          name: Linux ${{ env.KERNVER }}
-          target_commitish: ${{ env.NEW_COMMIT }}
-          body_path: ${{ github.workspace }}/RELEASE.md
-          draft: false
-          prerelease: false
-          files: |
-            patch/*.patch
-            config/config
+            
