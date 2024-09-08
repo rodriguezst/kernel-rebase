@@ -4,7 +4,7 @@ env:
   CURR_REPO: 'map220v/sm8150-mainline'
   CURR_REF: 'nabu-6.8'
   NEW_REPO: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git'
-  NEW_REF: 'v6.9'
+  NEW_REF: 'linux-6.8.y'
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
           repository: ${{ env.CURR_REPO }}
           ref: ${{ env.CURR_REF }}
           path: linux
-          fetch-depth: 1000
+          fetch-depth: 100
 
       - uses: actions/checkout@v4
         with:
@@ -38,7 +38,7 @@ jobs:
             UPSTREAM="https://github.com/"${UPSTREAM}.git
           fi;
           git remote add upstream ${UPSTREAM}
-          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=100000
+          git fetch upstream ${{ env.NEW_REF }}:${{ env.NEW_REF }} --depth=10000
           git rebase ${{ env.NEW_REF }}
           git log -1 ${{ env.NEW_REF }} > ../RELEASE.md
           mkdir -p ../patch
